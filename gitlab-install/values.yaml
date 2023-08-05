@@ -1,0 +1,59 @@
+masterNodeName: k8s-master
+
+rootDirectory: /raid1/localPV
+
+global:
+  storageClass: local-storage
+
+  hosts:
+    domain: example.com
+  time_zone: Asia/Taipei
+
+  ingress:
+    class: "nginx"
+    configureCertmanager: false
+  psql:
+    host: gitlab-external-postgresql.gitlab.svc.cluster.local
+    password:
+      secret: gitlab-external-postgresql
+      key: password
+  redis:
+    host: gitlab-external-redis-master.gitlab.svc.cluster.local
+    auth:
+      enabled: false
+  minio:
+    persistence:
+      name: data-minio-pv
+      storageClass: local-storage
+      size: 10Gi
+      matchLabels:
+        app: minio
+
+gitlab:
+  gitlab:
+    gitaly:
+      persistence:
+        name: data-gitaly-pv
+        storageClass: local-storage
+        size: 20Gi
+        matchLabels:
+          app: gitaly
+  prometheus:
+    server:
+      persistentVolume:
+        name: data-prometheus-server-pv
+        storageClass: local-storage
+        size: 8Gi
+        matchLabels:
+          app: prometheus
+  postgresql:
+    install: false
+  redis:
+    install: false
+  nginx-ingress:
+    enabled: false
+  certmanager:
+    install: false
+  gitlab-runner:
+    install: false
+
