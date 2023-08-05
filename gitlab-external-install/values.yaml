@@ -1,0 +1,36 @@
+masterNodeName: k8s-master
+
+rootDirectory: /raid1/localPV
+
+global:
+  storageClass: local-storage
+  postgresql:
+    auth:
+      postgresPassword: "AIQC@postgresql"
+      username: "gitlab"
+      password: "gitlab@postgresql"
+      database: "gitlabhq_production"
+
+postgresql:
+  image:
+    tag: 13.6.0-debian-10-r92
+  namespace: postgresql
+  primary:
+    persistence:
+      name: data-postgresql-pv
+      size: 8Gi
+      selector:
+        matchLabels:
+          app: postgresql
+
+redis:
+  architecture: standalone
+  auth:
+    enabled: false
+  master:
+    persistence:
+      name: data-redis-pv
+      size: 8Gi
+      selector:
+        matchLabels:
+          app: redis
